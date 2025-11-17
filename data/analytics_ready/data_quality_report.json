@@ -1,0 +1,21 @@
+{
+  "total_rows": 47616,
+  "completeness": {
+    "customer_id": 100.0,
+    "customer_email": 100.0,
+    "product_id": 100.0,
+    "order_amount": 100.0
+  },
+  "validity": {
+    "valid_email_format": 100.0,
+    "positive_amounts": 100.0,
+    "valid_states": 100.0
+  },
+  "uniqueness": {
+    "order_id_uniqueness": 100.0
+  },
+  "consistency": {
+    "product_catalog_match": 100.0
+  },
+  "generated_at": "2025-11-17T10:11:52.434710"
+}

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual env
+env/
+venv/
+
+# DuckDB
+*.duckdb
+
+# CSV and JSON data
+data/*.csv
+data/*.json
+data/analytics_ready/*.csv
+data/raw/*.csv
+data/raw/*.json
+
+# Backups
+backups/
+
+# Logs
+logs/*.log
+
+# macOS
+.DS_Store
