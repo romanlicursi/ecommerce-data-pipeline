@@ -1,0 +1,100 @@
+version: 2
+
+sources:
+  - name: ecommerce_raw
+    schema: raw
+    description: "Raw tables ingested from CSV and JSON source files"
+    tables:
+      - name: product_catalog
+        description: "Product reference data loaded from JSON"
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
+
+  - name: ecommerce_cleaned
+    schema: cleaned
+    description: "Validated and cleaned order records"
+    tables:
+      - name: orders
+        description: "Orders after deduplication, null-filling, and standardization"
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+          - name: order_status
+            tests:
+              - accepted_values:
+                  values: ['completed', 'pending', 'cancelled', 'refunded']
+          - name: order_amount
+            tests:
+              - not_null
+
+models:
+  - name: stg_orders
+    description: "Staged order records with typed columns"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_product_catalog
+    description: "Staged product catalog with renamed columns"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_orders
+    description: "Enriched order fact table joined to product catalog, with date parts and value segmentation"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_segment
+        tests:
+          - accepted_values:
+              values: ['High Value', 'Medium Value', 'Low Value']
+
+  - name: dim_customers
+    description: "Customer dimension with LTV, order frequency, and tier classification"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_type
+        tests:
+          - accepted_values:
+              values: ['One-Time', 'Occasional', 'Repeat']
+      - name: customer_tier
+        tests:
+          - accepted_values:
+              values: ['VIP', 'Premium', 'Standard', 'Basic']
+
+  - name: mart_product_performance
+    description: "Product-level revenue, order volume, and geographic reach metrics"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+
+  - name: mart_marketing_attribution
+    description: "Marketing source performance by quarter with revenue ranking"
+
+  - name: mart_daily_metrics
+    description: "Daily order volume, revenue, and average order value time series"
+    columns:
+      - name: order_date
+        tests:
+          - unique
+          - not_null
